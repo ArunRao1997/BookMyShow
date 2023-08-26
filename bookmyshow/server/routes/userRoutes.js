@@ -22,11 +22,38 @@ router.post('/register', async (req, res) => {
 
         const newUser = new User(req.body)
         await newUser.save()
-        res.send({success: true, message:"Registration Successful, Please Login"})
+        res.send({ success: true, message: "Registration Successful, Please Login" })
 
     } catch (error) {
         console.log(error)
     }
+})
+
+// Login route
+
+router.post('/login', async (req, res) => {
+    const user = await User.findOne({email: req.body.email})
+
+    if(!user){
+        return res.send({
+            success: false,
+            message:'User does not exist'
+        })
+    }
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password)
+
+    if(!validPassword){
+        return res.send({
+            success: false,
+            message:'Invalid Password'
+        })
+    }
+
+    res.send({
+        success: true,
+        message:'User Logged in Successfully'
+    })
 })
 
 module.exports = router
