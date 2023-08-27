@@ -2,6 +2,10 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const User = require('../models/userModel')
 
+const authMiddleware = require('../middleware/authMiddleware')
+
+const jwt = require('jsonwebtoken')
+
 // Register a user
 
 router.post('/register', async (req, res) => {
@@ -32,28 +36,44 @@ router.post('/register', async (req, res) => {
 // Login route
 
 router.post('/login', async (req, res) => {
-    const user = await User.findOne({email: req.body.email})
+    const user = await User.findOne({ email: req.body.email })
 
-    if(!user){
+    if (!user) {
         return res.send({
             success: false,
-            message:'User does not exist'
+            message: 'User does not exist'
         })
     }
 
     const validPassword = await bcrypt.compare(req.body.password, user.password)
 
-    if(!validPassword){
+    if (!validPassword) {
         return res.send({
             success: false,
-            message:'Invalid Password'
+            message: 'Invalid Password'
         })
     }
 
+    const token = jwt.sign({ userId: user._id }, process.env.jwt_secret_key, { expiresIn: '1d' })
     res.send({
         success: true,
-        message:'User Logged in Successfully'
+        message: 'User Logged in Successfully',
+        token: token
     })
+})
+
+// Get user by Id (Protected Routes)
+router.get('/get-current-user', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.body.userId).select('-password')
+        res.send({
+            success: true,
+            message: 'User details fetched successfully',
+            data: user
+        })
+    } catch (error) {
+
+    }
 })
 
 module.exports = router
