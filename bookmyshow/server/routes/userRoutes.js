@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
     })
 })
 
-// Get user by Id (Protected Routes)
+// Get user by Id (Protected Route)
 router.get('/get-current-user', authMiddleware, async (req, res) => {
     try {
         const user = await User.findById(req.body.userId).select('-password')
@@ -72,7 +72,10 @@ router.get('/get-current-user', authMiddleware, async (req, res) => {
             data: user
         })
     } catch (error) {
-
+        res.send({
+            success: false,
+            message: error.message,
+        });
     }
 })
 
