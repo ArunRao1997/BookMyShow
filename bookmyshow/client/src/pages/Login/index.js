@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, message } from "antd";
 import Button from "../../components/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,7 +16,6 @@ const Login = () => {
         message.success(response.message)
         localStorage.setItem('token', response.token)
         navigate('/')
-        // window.location.ref = '/'
       }
       else {
         message.error(response.message)
@@ -25,6 +24,12 @@ const Login = () => {
       message.error(error.message)
     }
   }
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate('/')
+    }
+  }, [])
+
   return (
     <div className="flex justify-center h-screen items-center bg-primary">
       <div className="card p-3 w-400">

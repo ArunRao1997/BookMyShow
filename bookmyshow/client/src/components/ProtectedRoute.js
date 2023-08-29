@@ -1,10 +1,11 @@
 import { message } from "antd";
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import { GetCurrentUser } from "../apicalls/users";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SetUser } from "../redux/usersSlice";
 import { HideLoading, ShowLoading } from "../redux/loadersSlice";
+import { axiosInstance } from "../apicalls/index";
 
 function ProtectedRoute({ children }) {
   const { user } = useSelector((state) => state.users);
@@ -39,14 +40,26 @@ function ProtectedRoute({ children }) {
     }
   }, []);
 
+  // useEffect(() => {
+  //   const getAndSetUser = async () => {
+  //     if (localStorage.getItem("token")) {
+  //       await getpresentUser();
+  //     } else {
+  //       navigate("/login");
+  //     }
+  //   };
+
+  //   getAndSetUser();
+  // }, [getpresentUser, navigate]);
+
   return (
-    user && 
+    user &&
     (
       <div className="layout p-1">
         <div className="header bg-primary flex justify-between p-2">
           <div>
             <h1 className="text-2xl text-white cursor-pointer"
-              // onClick={() => navigate("/")}
+            // onClick={() => navigate("/")}
             >Book My Show</h1>
           </div>
 
@@ -54,23 +67,24 @@ function ProtectedRoute({ children }) {
             <i className="ri-shield-user-line text-primary mt-1"></i>
             <h1
               className="text-sm underline"
-              // onClick={() => {
-              //   if (user.isAdmin) {
-              //     navigate("/admin");
-              //   } else {
-              //     navigate("/profile");
-              //   }
-              // }}
+              onClick={() => {
+                if (user.isAdmin) {
+                  navigate("/admin");
+                } else {
+                  navigate("/profile");
+                }
+              }}
             >
               {user.name}
             </h1>
 
             <i
               className="ri-logout-box-r-line mt-1"
-              // onClick={() => {
-              //   localStorage.removeItem("token");
-              //   navigate("/login");
-              // }}
+              onClick={() => {
+                localStorage.removeItem("token");
+                axiosInstance.defaults.headers.common["Authorization"] = null;
+                navigate("/login");
+              }}
             ></i>
           </div>
         </div>
