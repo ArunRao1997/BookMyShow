@@ -7,7 +7,6 @@ const authMiddleware = require('../middleware/authMiddleware')
 const jwt = require('jsonwebtoken')
 
 // Register a user
-
 router.post('/register', async (req, res) => {
     try {
         const userExists = await User.findOne({ email: req.body.email })
@@ -19,7 +18,7 @@ router.post('/register', async (req, res) => {
             })
         }
 
-        // Hash the password 
+        // Hashing the password 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
         req.body.password = hashedPassword
@@ -34,7 +33,6 @@ router.post('/register', async (req, res) => {
 })
 
 // Login route
-
 router.post('/login', async (req, res) => {
     const user = await User.findOne({ email: req.body.email })
 
