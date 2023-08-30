@@ -4,7 +4,6 @@ const Movie = require('../models/movieModel')
 
 
 // Add a Movie
-
 router.post('/add-movie', authMiddleware, async (req, res) => {
     try {
         const newMovie = new Movie(req.body)
@@ -22,7 +21,6 @@ router.post('/add-movie', authMiddleware, async (req, res) => {
 });
 
 // Get All Movies
-
 router.get('/get-all-movies', authMiddleware, async (req, res) => {
     try {
         const movies = await Movie.find()
@@ -56,7 +54,6 @@ router.post('/update-movie', authMiddleware, async (req, res) => {
 });
 
 // Delete a Movie 
-
 router.post("/delete-movie", authMiddleware, async (req, res) => {
     try {
         await Movie.findByIdAndDelete(req.body.movieId);
