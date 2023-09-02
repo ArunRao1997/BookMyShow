@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { HideLoading, ShowLoading } from "../../redux/loadersSlice";
 import { message, Table } from "antd";
-// import Shows from "./Shows";
+import Shows from "./Shows";
 
 function TheatresList() {
     const { user } = useSelector((state) => state.users);
@@ -43,22 +43,22 @@ function TheatresList() {
         }
     };
 
-      const handleDelete = async (id) => {
+    const handleDelete = async (id) => {
         try {
-          dispatch(ShowLoading());
-          const response = await DeleteTheatre({ theatreId: id });
-          if (response.success) {
-            message.success(response.message);
-            getData();
-          } else {
-            message.error(response.message);
-          }
-          dispatch(HideLoading());
+            dispatch(ShowLoading());
+            const response = await DeleteTheatre({ theatreId: id });
+            if (response.success) {
+                message.success(response.message);
+                getData();
+            } else {
+                message.error(response.message);
+            }
+            dispatch(HideLoading());
         } catch (error) {
-          dispatch(HideLoading());
-          message.error(error.message);
+            dispatch(HideLoading());
+            message.error(error.message);
         }
-      };
+    };
 
     const columns = [
         {
@@ -96,26 +96,26 @@ function TheatresList() {
                     <div className="flex gap-1 items-center">
                         <i
                             className="ri-delete-bin-line"
-                          onClick={() => {
-                            handleDelete(record._id);
-                          }}
+                            onClick={() => {
+                                handleDelete(record._id);
+                            }}
                         ></i>
                         <i
                             className="ri-pencil-line"
-                          onClick={() => {
-                            setFormType("edit");
-                            setSelectedTheatre(record);
-                            setShowTheatreFormModal(true);
-                          }}
+                            onClick={() => {
+                                setFormType("edit");
+                                setSelectedTheatre(record);
+                                setShowTheatreFormModal(true);
+                            }}
                         ></i>
 
                         {record.isActive && (
                             <span
                                 className="underline"
-                            onClick={() => {
-                              setSelectedTheatre(record);
-                              setOpenShowsModal(true);
-                            }}
+                                onClick={() => {
+                                    setSelectedTheatre(record);
+                                    setOpenShowsModal(true);
+                                }}
                             >
                                 Shows
                             </span>
@@ -156,13 +156,13 @@ function TheatresList() {
                 />
             )}
 
-            {/* {openShowsModal && (
-        <Shows
-          openShowsModal={openShowsModal}
-          setOpenShowsModal={setOpenShowsModal}
-          theatre={selectedTheatre}
-        />
-      )} */}
+            {openShowsModal && (
+                <Shows
+                    openShowsModal={openShowsModal}
+                    setOpenShowsModal={setOpenShowsModal}
+                    theatre={selectedTheatre}
+                />
+            )}
         </div>
     );
 }

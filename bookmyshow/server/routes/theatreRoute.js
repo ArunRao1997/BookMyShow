@@ -19,6 +19,24 @@ router.post("/add-theatre", authMiddleware, async (req, res) => {
     }
 });
 
+
+//Get all theatres
+router.get("/get-all-theatres", authMiddleware, async (req, res) => {
+    try {
+      const theatres = await Theatre.find().populate('owner')
+      res.send({
+        success: true,
+        message: "Theatres fetched successfully",
+        data: theatres,
+      });
+    } catch (error) {
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+  });
+
 // Get all theatres by owner
 router.post("/get-all-theatres-by-owner", authMiddleware, async (req, res) => {
     try {

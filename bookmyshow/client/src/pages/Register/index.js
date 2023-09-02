@@ -24,7 +24,8 @@ const Register = () => {
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
-      navigate('/')
+      // navigate('/')
+      window.location.href = "/"
     }
   }, [])
 

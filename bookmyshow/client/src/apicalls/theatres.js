@@ -12,6 +12,15 @@ export const AddTheatre = async (payload) => {
     }
 };
 
+// Get all theatres
+export const GetAllTheatres = async () => {
+    try {
+      const response = await axiosInstance.get("/api/theatres/get-all-theatres");
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  };
 
 // Get all theatres by owner
 export const GetAllTheatresByOwner = async (payload) => {
