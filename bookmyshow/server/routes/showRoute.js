@@ -42,4 +42,20 @@ router.post("/get-all-shows-by-theatre", authMiddleware, async (req, res) => {
     }
 });
 
+// Delete a Show 
+router.post("/delete-show", authMiddleware, async (req, res) => {
+    try {
+        await Show.findByIdAndDelete(req.body.showId);
+        res.send({
+            success: true,
+            message: "Show deleted successfully",
+        });
+    } catch (error) {
+        res.send({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
 module.exports = router

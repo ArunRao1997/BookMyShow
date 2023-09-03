@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const authMiddleware = require('../middleware/authMiddleware');
+const Show = require('../models/showModel');
 const Theatre = require('../models/theatreModel')
 
 // Add a theatre
@@ -89,5 +90,48 @@ router.post("/delete-theatre", authMiddleware, async (req, res) => {
         });
     }
 });
+
+// get all unique theatres which have shows of a movie
+
+
+router.post("/get-all-theatres-by-movie", authMiddleware, async (req, res) => {
+    try {
+      const { movie, date } = req.body;
+  
+      // find all shows of a movie
+      const shows = await Show.find({ movie, date })
+        .populate("theatre")
+        .sort({ createdAt: -1 });
+  
+      // get all unique theatres
+      let uniqueTheatres = [];
+      shows.forEach((show) => {
+        const theatre = uniqueTheatres.find(
+          (theatre) => theatre._id == show.theatre._id
+        );
+  
+        if (!theatre) {
+          const showsForThisTheatre = shows.filter(
+            (showObj) => showObj.theatre._id == show.theatre._id
+          );
+          uniqueTheatres.push({
+            ...show.theatre._doc,
+            shows: showsForThisTheatre,
+          });
+        }
+      });
+  
+      res.send({
+        success: true,
+        message: "Theatres fetched successfully",
+        data: uniqueTheatres,
+      });
+    } catch (error) {
+      res.send({
+        success: false,
+        message: error.message,
+      });
+    }
+  });  
 
 module.exports = router

@@ -64,24 +64,24 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
             dispatch(HideLoading());
         }
 
-        const handleDelete = async (id) => {
-            try {
-                dispatch(ShowLoading());
-                const response = await DeleteShow({ showId: id });
-                if (response.success) {
-                    message.success(response.message);
-                    getData();
-                } else {
-                    message.error(response.message);
-                }
-                dispatch(HideLoading());
-            } catch (error) {
-                dispatch(HideLoading());
-                message.error(error.message);
-            }
-        };
-
     }
+
+    const handleDelete = async (id) => {
+        try {
+            dispatch(ShowLoading());
+            const response = await DeleteShow({ showId: id });
+            if (response.success) {
+                message.success(response.message);
+                getData();
+            } else {
+                message.error(response.message);
+            }
+            dispatch(HideLoading());
+        } catch (error) {
+            dispatch(HideLoading());
+            message.error(error.message);
+        }
+    };
 
     const columns = [
         {
@@ -130,9 +130,9 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
                         {record.bookedSeats.length === 0 && (
                             <i
                                 className="ri-delete-bin-line"
-                                // onClick={() => {
-                                //     handleDelete(record._id);
-                                // }}
+                                onClick={() => {
+                                    handleDelete(record._id);
+                                }}
                             ></i>
                         )}
                     </div>
