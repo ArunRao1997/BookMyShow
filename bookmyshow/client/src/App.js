@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
 import Admin from './pages/Admin';
 import TheatresAndMovies from './pages/Theatres&Movies';
+import BookShow from './pages/BookShow';
 
 function App() {
   const { loading } = useSelector((state) => state.loaders);
@@ -26,6 +27,7 @@ function App() {
       )}
       <BrowserRouter>
         <Routes>
+
           <Route path='/'
             element={
               <ProtectedRoute>
@@ -33,11 +35,21 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/movie/:id"
             element={
               <ProtectedRoute>
                 <TheatresAndMovies />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/book-show/:id"
+            element={
+              <ProtectedRoute>
+                <BookShow />
               </ProtectedRoute>
             }
           />

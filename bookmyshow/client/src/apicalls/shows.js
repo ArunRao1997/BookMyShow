@@ -35,3 +35,16 @@ export const DeleteShow = async (payload) => {
         return error
     }
 };
+
+//Get show by id
+export const GetShowById = async (payload) => {
+    try {
+        const response = await axiosInstance.post(
+            "/api/shows/get-show-by-id",
+            payload
+        );
+        return response.data;
+    } catch (error) {
+        return error.response;
+    }
+}

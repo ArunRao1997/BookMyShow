@@ -6,6 +6,7 @@ import { HideLoading, ShowLoading } from "../../../redux/loadersSlice";
 import { AddShow, GetAllShowsByTheatre, DeleteShow } from "../../../apicalls/shows";
 import { GetAllMovies } from "../../../apicalls/movies";
 
+
 import moment from "moment";
 
 function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
@@ -14,7 +15,9 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
     let [movies, setMovies] = useState([])
     const [shows, setShows] = useState([]);
 
+
     const dispatch = useDispatch();
+
 
     const getData = async () => {
         try {
@@ -64,12 +67,16 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
             dispatch(HideLoading());
         }
 
+
+
+
     }
 
     const handleDelete = async (id) => {
         try {
             dispatch(ShowLoading());
             const response = await DeleteShow({ showId: id });
+
             if (response.success) {
                 message.success(response.message);
                 getData();
@@ -78,11 +85,10 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
             }
             dispatch(HideLoading());
         } catch (error) {
-            dispatch(HideLoading());
             message.error(error.message);
+            dispatch(HideLoading());
         }
     };
-
     const columns = [
         {
             title: "Show Name",
