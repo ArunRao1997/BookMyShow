@@ -109,8 +109,9 @@ function Shows({ openShowsModal, setOpenShowsModal, theatre }) {
             title: "Movie",
             dataIndex: "movie",
             render: (text, record) => {
-                return record.movie.title;
+                return record.movie ? record.movie.title : "N/A";
             },
+
         },
         {
             title: "Ticket Price",
