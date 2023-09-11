@@ -12,8 +12,15 @@ function TheatresForMovie() {
     const tempDate = new URLSearchParams(window.location.search).get("date");
     const [date, setDate] = React.useState(tempDate || moment().format("YYYY-MM-DD"));
 
-    const [isHovering, setIsHovering] = useState(false);
+    const [isHoveredTime, setHoveredTime] = useState(null);
 
+    const handleMouseEnterTime = (time) => {
+        setHoveredTime(time);
+    };
+
+    const handleMouseLeaveTime = () => {
+        setHoveredTime(null);
+    };
 
 
     const [movie, setMovie] = useState([]);
@@ -51,14 +58,6 @@ function TheatresForMovie() {
             dispatch(HideLoading());
             message.error(error.message);
         }
-    };
-
-    const handleMouseEnter = (id) => {
-        setIsHovering(true);
-    };
-
-    const handleMouseLeave = (id) => {
-        setIsHovering(false);
     };
 
     useEffect(() => {
@@ -120,12 +119,13 @@ function TheatresForMovie() {
                                         (a, b) => moment(a.time, "HH:mm") - moment(b.time, "HH:mm")
                                     )
                                     .map((show) => (
-                                        <div key={show._id} style={{
-                                            backgroundColor: isHovering ? '#DF1827' : 'white',
-                                            color: isHovering ? 'white' : '#DF1827',
-                                        }}
-                                            onMouseEnter={handleMouseEnter}
-                                            onMouseLeave={handleMouseLeave}
+                                        <div key={show._id}
+                                            style={{
+                                                backgroundColor: isHoveredTime === show.time ? '#DF1827' : 'white',
+                                                color: isHoveredTime === show.time ? 'white' : '#DF1827',
+                                            }}
+                                            onMouseEnter={() => handleMouseEnterTime(show.time)}
+                                            onMouseLeave={handleMouseLeaveTime}
                                             className="card p-1 cursor-pointer border-primary"
                                             onClick={() => {
                                                 navigate(`/book-show/${show._id}`);

@@ -100,4 +100,103 @@ router.get("/get-bookings", authMiddleware, async (req, res) => {
     }
 });
 
+// Create a cancel-booking endpoint
+router.post("/cancel-booking", authMiddleware, async (req, res) => {
+    try {
+        // Use req.body.userId as the user ID for cancellation
+        const userId = req.body.userId;
+
+        // Find the booking(s) for the user
+        const bookings = await Booking.find({ user: userId });
+
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: "Bookings not found for the user",
+            });
+        }
+
+        // You can add further logic here to select a specific booking to cancel, if needed
+        const bookingToCancel = bookings[0]; // For example, you can choose the first booking
+
+        // Perform the cancellation logic here, for example, removing the booking
+        await Booking.findByIdAndRemove(bookingToCancel._id);
+
+        // Update the show's bookedSeats to free up the seats
+        const show = await Show.findById(bookingToCancel.show);
+        const updatedBookedSeats = show.bookedSeats.filter(
+            (seat) => !bookingToCancel.seats.includes(seat)
+        );
+        await Show.findByIdAndUpdate(bookingToCancel.show, {
+            bookedSeats: updatedBookedSeats,
+        });
+
+        res.send({
+            success: true,
+            message: "Booking canceled successfully",
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: error.message,
+        });
+    }
+});
+
+// // Create a cancel-booking endpoint
+// router.post("/cancel-booking", authMiddleware, async (req, res) => {
+//     try {
+//         // Use req.body.userId as the user ID for cancellation
+//         const userId = req.body.userId;
+
+//         // Find the booking(s) for the user
+//         const bookings = await Booking.find({ user: userId });
+
+//         if (!bookings || bookings.length === 0) {
+//             return res.status(404).send({
+//                 success: false,
+//                 message: "Bookings not found for the user",
+//             });
+//         }
+
+//         // You can add further logic here to select a specific booking to cancel, if needed
+//         const bookingToCancel = bookings[0]; // For example, you can choose the first booking
+
+//         // Calculate the time difference between show time and current time
+//         const currentTime = moment();
+//         const showDateTime = moment(bookingToCancel.show.date + " " + bookingToCancel.show.time, "YYYY-MM-DD HH:mm");
+//         const timeDifferenceMinutes = showDateTime.diff(currentTime, "minutes");
+
+//         if (timeDifferenceMinutes >= 60) {
+//             // Perform the cancellation logic here, for example, removing the booking
+//             await Booking.findByIdAndRemove(bookingToCancel._id);
+
+//             // Update the show's bookedSeats to free up the seats
+//             const show = await Show.findById(bookingToCancel.show);
+//             const updatedBookedSeats = show.bookedSeats.filter(
+//                 (seat) => !bookingToCancel.seats.includes(seat)
+//             );
+//             await Show.findByIdAndUpdate(bookingToCancel.show, {
+//                 bookedSeats: updatedBookedSeats,
+//             });
+
+//             res.send({
+//                 success: true,
+//                 message: "Booking canceled successfully",
+//             });
+//         } else {
+//             res.status(400).send({
+//                 success: false,
+//                 message: "You can only cancel bookings at least 1 hour before the show.",
+//             });
+//         }
+//     } catch (error) {
+//         res.status(500).send({
+//             success: false,
+//             message: error.message,
+//         });
+//     }
+// });
+
+
 module.exports = router;

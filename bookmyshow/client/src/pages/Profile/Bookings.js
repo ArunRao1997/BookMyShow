@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { HideLoading, ShowLoading } from "../../redux/loadersSlice";
 import { message, Row, Col, Button } from "antd";
-import { GetBookingsOfUser } from "../../apicalls/bookings";
+import { GetBookingsOfUser, CancelBookingsOfUser } from "../../apicalls/bookings";
 import moment from "moment";
 
 function Bookings() {
@@ -11,6 +11,15 @@ function Bookings() {
     const [nonExpiredBookings, setNonExpiredBookings] = useState([]);
     const [expiredBookings, setExpiredBookings] = useState([]);
     const [showExpired, setShowExpired] = useState(false); // State to control showing expired bookings
+    const [isHovering, setIsHovering] = useState(false);
+
+    const handleMouseEnter = (id) => {
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = (id) => {
+        setIsHovering(false);
+    };
 
     const getData = async () => {
         try {
@@ -26,7 +35,7 @@ function Bookings() {
 
                 response.data.forEach((booking) => {
                     const bookingDateTime = moment(booking.show.date + " " + booking.show.time, "YYYY-MM-DD HH:mm");
-                    
+
                     if (bookingDateTime.isAfter(currentDate)) {
                         nonExpired.push(booking);
                     } else {
@@ -52,6 +61,25 @@ function Bookings() {
 
     const toggleShowExpired = () => {
         setShowExpired(!showExpired); // Toggle the state to show/hide expired bookings
+    };
+
+    const cancelBooking = async (bookingId, showTime) => {
+        try {
+            dispatch(ShowLoading());
+            const response = await CancelBookingsOfUser(bookingId, showTime);
+
+            if (response.success) {
+                // Booking canceled successfully, update the UI or fetch data again
+                getData(); // Fetch updated booking data
+                message.success(response.message);
+            } else {
+                message.error(response.message);
+            }
+            dispatch(HideLoading());
+        } catch (error) {
+            message.error("An error occurred while canceling the booking");
+            dispatch(HideLoading());
+        }
     };
 
     return (
@@ -95,6 +123,19 @@ function Bookings() {
                                 />
                                 <h1 className="text-sm">Seats: {booking.seats.join(", ")}</h1>
                             </div>
+                            {/* Button to cancel the booking */}
+                            <Button
+                            className="card p-1 cursor-pointer border-primary"
+                                style={{
+                                    backgroundColor: isHovering ? '#DF1827' : 'white',
+                                    color: isHovering ? 'white' : '#DF1827',
+                                }}
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                                onClick={() => cancelBooking(booking._id, booking.show.time)}
+                            >
+                                Cancel Booking
+                            </Button>
                         </div>
                     </Col>
                 ))}
