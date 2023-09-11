@@ -125,7 +125,7 @@ function Bookings() {
                             </div>
                             {/* Button to cancel the booking */}
                             <Button
-                            className="card p-1 cursor-pointer border-primary"
+                                className="card p-1 cursor-pointer border-primary"
                                 style={{
                                     backgroundColor: isHovering ? '#DF1827' : 'white',
                                     color: isHovering ? 'white' : '#DF1827',

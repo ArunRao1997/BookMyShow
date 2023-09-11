@@ -38,22 +38,9 @@ export const GetBookingsOfUser = async () => {
 };
 
 // cancel bookings of a user
-export const CancelBookingsOfUsers = async (payload) => {
-    try {
-        const response = await axiosInstance.post(
-            "/api/bookings/cancel-booking",
-            payload
-        );
-        return response.data;
-    } catch (error) {
-        return error.response.data;
-    }
-};
-
-// Function to cancel a booking
 export const CancelBookingsOfUser = async (payload) => {
     try {
-        const response = await axiosInstance.post('/api/bookings/cancel-booking', {payload});
+        const response = await axiosInstance.post('/api/bookings/cancel-booking', { payload });
         return response.data;
     } catch (error) {
         return error;
