@@ -1,7 +1,7 @@
 const authMiddleware = require("../middleware/authMiddleware");
 const Booking = require("../models/bookingModel");
 const Show = require("../models/showModel");
-
+const moment = require("moment"); // Import the moment library for date and time manipulation
 
 const router = require("express").Router();
 const stripe = require("stripe")(process.env.stripe_key);
@@ -41,7 +41,6 @@ router.post("/make-payment", authMiddleware, async (req, res) => {
 });
 
 // book shows
-
 router.post("/book-show", authMiddleware, async (req, res) => {
     try {
         // save booking
@@ -100,8 +99,5 @@ router.get("/get-bookings", authMiddleware, async (req, res) => {
         });
     }
 });
-
-
-
 
 module.exports = router;
