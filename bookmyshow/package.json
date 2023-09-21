@@ -47,7 +47,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "npm install --prefix server && npm install --prefix client && npm run build --prefix client",
+    "build": "cd server && npm install && cd ../client && npm install && npm run build --if-present",
     "start": "node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
